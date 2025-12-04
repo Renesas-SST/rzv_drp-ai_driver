@@ -2,7 +2,7 @@
 /*
  * Driver for the Renesas RZ/V2M RZ/V2MA RZ/V2L DRP-AI unit
  *
- * Copyright (C) 2021 Renesas Electronics Corporation
+ * Copyright (C) 2026 Renesas Electronics Corporation
  *
  *
  * This program is free software; you can redistribute it and/or modify

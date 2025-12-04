@@ -6,18 +6,18 @@ LIC_FILES_CHKSUM = " \
 "
 
 inherit module
-require include/rz-modules-common.inc
+require include/rz-cmn-modules-common.inc
 
-DEPENDS = "linux-renesas"
+DEPENDS = "linux-yocto"
 PN = "kernel-module-udmabuf"
 PV = "v3.2.4"
 
-SRC_URI = "git://github.com/ikwzm/udmabuf.git;protocol=git"
+SRC_URI = "git://github.com/ikwzm/udmabuf.git;branch=master;protocol=https"
 SRCREV = "24a1346c1f4371ef6161699c8ccb8bf968e6bb0a"
 
-
-SRC_URI_append = " \
+SRC_URI:append = " \
 	file://0001-change-makefile.patch \
+	file://0001-Support-u-dma-buf-for-kernel-6.10.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -33,8 +33,8 @@ do_compile() {
 
 
 do_install () {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}/kernel/
-    install -m 644 ${S}/u-dma-buf.ko ${D}/lib/modules/${KERNEL_VERSION}/kernel/
+    install -d ${D}/${libdir}/modules/${KERNEL_VERSION}/kernel/
+    install -m 644 ${B}/u-dma-buf.ko ${D}/${libdir}/modules/${KERNEL_VERSION}/kernel/
 }
 
 PACKAGES = " \
@@ -42,12 +42,14 @@ PACKAGES = " \
     ${PN}-dev \
 "
 
-FILES_${PN} = " \
-    /lib/modules/${KERNEL_VERSION}/kernel/u-dma-buf.ko \
+FILES:${PN} = " \
+    ${libdir}/modules/${KERNEL_VERSION}/kernel/u-dma-buf.ko \
 "
 
 #Package name aliases
-RPROVIDES_${PN} += "kernel-module-udmabuf"
+RPROVIDES:${PN} += "kernel-module-udmabuf"
 
 # Autoload u-dma-buf
 KERNEL_MODULE_AUTOLOAD += "u-dma-buf"
+
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
