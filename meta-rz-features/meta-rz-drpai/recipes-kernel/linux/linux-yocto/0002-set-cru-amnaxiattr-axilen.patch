@@ -1,0 +1,14 @@
+Upstream-Status: Pending
+diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
+index d24864726558..897e2e1c1d68 100644
+--- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
++++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
+@@ -38,7 +38,7 @@
+ 
+ /* AXI-VD Bus Master Transfer Setting Register */
+ #define AMnAXIATTR_AXILEN_MASK		GENMASK(3, 0)
+-#define AMnAXIATTR_AXILEN		(0xf)
++#define AMnAXIATTR_AXILEN		(0x6)
+ 
+ /* AXI Master FIFO Pointer Register for CRU Image Data */
+ #define AMnFIFOPNTR_FIFOWPNTR		GENMASK(7, 0)
