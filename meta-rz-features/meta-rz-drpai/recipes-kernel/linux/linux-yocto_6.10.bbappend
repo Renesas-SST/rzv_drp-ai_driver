@@ -7,4 +7,5 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}/:"
 
 SRC_URI:append = "\
 	file://0001-rz-cmn-Add-support-for-RZ-V-DRP-AI-driver.patch \
+	file://0002-set-cru-amnaxiattr-axilen.patch \
 "
