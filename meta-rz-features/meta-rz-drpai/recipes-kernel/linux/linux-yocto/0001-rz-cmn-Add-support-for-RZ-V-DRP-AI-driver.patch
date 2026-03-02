@@ -29,9 +29,9 @@ Upstream-Status: Pending
  drivers/drpai/drpai-reg_v2h.h                 | 1053 ++++
  drivers/drpai/lock_drpai.c                    |  543 ++
  drivers/drpai/lock_drpai.h                    |   67 +
- include/linux/drpai.h                         |   22 +
+ include/linux/drpai_v2l.h                     |   22 +
  include/linux/drpai_v2h.h                     |   23 +
- include/uapi/linux/drpai.h                    |  129 +
+ include/uapi/linux/drpai_v2l.h                |  129 +
  include/uapi/linux/drpai_v2h.h                |  148 +
  26 files changed, 14261 insertions(+), 13 deletions(-)
  create mode 100644 drivers/drpai/Kconfig
@@ -46,9 +46,9 @@ Upstream-Status: Pending
  create mode 100644 drivers/drpai/drpai-reg_v2h.h
  create mode 100644 drivers/drpai/lock_drpai.c
  create mode 100644 drivers/drpai/lock_drpai.h
- create mode 100644 include/linux/drpai.h
+ create mode 100644 include/linux/drpai_v2l.h
  create mode 100644 include/linux/drpai_v2h.h
- create mode 100644 include/uapi/linux/drpai.h
+ create mode 100644 include/uapi/linux/drpai_v2l.h
  create mode 100644 include/uapi/linux/drpai_v2h.h
 
 diff --git a/arch/arm64/boot/dts/renesas/r9a07g054.dtsi b/arch/arm64/boot/dts/renesas/r9a07g054.dtsi
@@ -457,7 +457,7 @@ index 000000000000..31e64c1894aa
 +#else
 +#include "r_typedefs.h"
 +#endif
-+#include <linux/drpai.h>
++#include <linux/drpai_v2l.h>
 +#include <linux/reset.h>
 +#include "drpai-core.h"
 +#include "drpai-reg.h"
@@ -3923,7 +3923,7 @@ index 000000000000..56ac3cdcde05
 +#include <linux/clk.h>
 +#include <linux/reset.h>
 +#include <linux/version.h>
-+#include <linux/drpai.h>    /* Header file for DRP-AI Driver */
++#include <linux/drpai_v2l.h>    /* Header file for DRP-AI Driver */
 +#include "drpai-core.h"     /* Header file for DRP-AI Core */
 +
 +// #define DRPAI_DRV_DEBUG_WAIT
@@ -14260,11 +14260,11 @@ index 000000000000..13e9190230bf
 +#endif /* __cplusplus */
 +
 +#endif /* R_DRPAI_LOCK_H */
-diff --git a/include/linux/drpai.h b/include/linux/drpai.h
+diff --git a/include/linux/drpai_v2l.h b/include/linux/drpai_v2l.h
 new file mode 100644
 index 000000000000..8b6cf6bbf0a0
 --- /dev/null
-+++ b/include/linux/drpai.h
++++ b/include/linux/drpai_v2l.h
 @@ -0,0 +1,22 @@
 +/*
 + * Driver for the Renesas RZ/V2M RZ/V2MA RZ/V2L DRP-AI unit
@@ -14285,7 +14285,7 @@ index 000000000000..8b6cf6bbf0a0
 +#ifndef _DRPAI_H
 +#define _DRPAI_H
 +
-+#include <uapi/linux/drpai.h>
++#include <uapi/linux/drpai_v2l.h>
 +
 +#endif /* _DRPAI_H */
 diff --git a/include/linux/drpai_v2h.h b/include/linux/drpai_v2h.h
@@ -14318,11 +14318,11 @@ index 000000000000..799a873bc4d4
 +#endif /* _DRPAI_H */
 + 
 \ No newline at end of file
-diff --git a/include/uapi/linux/drpai.h b/include/uapi/linux/drpai.h
+diff --git a/include/uapi/linux/drpai_v2l.h b/include/uapi/linux/drpai_v2l.h
 new file mode 100644
 index 000000000000..ee1f32a946f0
 --- /dev/null
-+++ b/include/uapi/linux/drpai.h
++++ b/include/uapi/linux/drpai_v2l.h
 @@ -0,0 +1,129 @@
 +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 +/*

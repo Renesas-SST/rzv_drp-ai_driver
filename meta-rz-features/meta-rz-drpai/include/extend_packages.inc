@@ -5,3 +5,12 @@ IMAGE_INSTALL:append = " \
     opencv \
     opencv-dev \
 "
+
+IMAGE_INSTALL:append = " \
+        kernel-module-mmngr \
+        kernel-module-mmngrbuf \
+        mmngrbuf-user-module \
+        mmngr-user-module \
+"
+
+IMAGE_INSTALL:append = " drpai "

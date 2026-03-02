@@ -20,13 +20,13 @@ PR = "r1"
 
 SRC_URI = " \
     file://COPYING;md5sum=6bc538ed5bd9a7fc9398086aedcd7e46 \
-    file://drpai.h \
+    file://drpai_v2l.h \
     file://drpai_v2h.h \
     "
 
 # The list of directories or files that are placed in packages.
 FILES:${PN} = " \
-    ${includedir}/linux/drpai.h \
+    ${includedir}/linux/drpai_v2l.h \
     ${includedir}/linux/drpai_v2h.h \
     "
 
@@ -34,6 +34,6 @@ UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/${includedir}/linux
-    install -m 0755 ${S}/drpai.h ${D}/${includedir}/linux
+    install -m 0755 ${S}/drpai_v2l.h ${D}/${includedir}/linux
     install -m 0755 ${S}/drpai_v2h.h ${D}/${includedir}/linux
 }
