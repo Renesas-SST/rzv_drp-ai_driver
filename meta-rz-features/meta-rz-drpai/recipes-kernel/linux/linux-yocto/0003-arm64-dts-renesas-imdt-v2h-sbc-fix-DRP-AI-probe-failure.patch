@@ -1,0 +1,53 @@
+From da3059a66a3f659b3a41bafb7aabf68489efec31 Mon Sep 17 00:00:00 2001
+From: Quoc Trinh <quoc.trinh.fz@renesas.com>
+Date: Fri, 24 Apr 2026 16:17:47 +0700
+Subject: [PATCH] arm64: dts: renesas: imdt-v2h-sbc: fix DRP-AI probe failureu
+
+Add memory-region = <&drp_reserved> to drpai node in imdt-v2h-sbc.dts and update r9a09g057.dtsi to resolve DRP-AI probe failure on IMDT V2H SBC board.
+
+Signed-off-by: Quoc Trinh <quoc.trinh.fz@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/imdt-v2h-sbc.dts |  5 +++++
+ arch/arm64/boot/dts/renesas/r9a09g057.dtsi   | 13 +++++++++++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/imdt-v2h-sbc.dts b/arch/arm64/boot/dts/renesas/imdt-v2h-sbc.dts
+index da544bc7f999d..8b8dc4ef3d018 100644
+--- a/arch/arm64/boot/dts/renesas/imdt-v2h-sbc.dts
++++ b/arch/arm64/boot/dts/renesas/imdt-v2h-sbc.dts
+@@ -130,3 +130,8 @@ &cru3 {
+ &adc {
+ 	status = "okay";
+ };
++
++&drpai0 {
++	memory-region = <&drp_reserved>;
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+index b95c72957b0ff..dfadaf24a0978 100644
+--- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
++++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+@@ -2850,6 +2850,19 @@ xhci1: usb@15860000 {
+  			phy-names = "usb1";
+  			status = "disabled";
+  		};
++
++			drpai0: drpai@16800000 {
++				compatible = "renesas,rzv2h-drpai";
++				reg = <0 0x17000000 0 0x1000000>,
++				      <0 0x16800000 0 0x400000>;
++				interrupts = <GIC_SPI 914 IRQ_TYPE_LEVEL_HIGH>,
++				             <GIC_SPI 915 IRQ_TYPE_LEVEL_HIGH>,
++				             <GIC_SPI 916 IRQ_TYPE_LEVEL_HIGH>,
++				             <GIC_SPI 917 IRQ_TYPE_LEVEL_HIGH>;
++				resets = <&cpg 253>;
++				power-domains = <&cpg>;
++				status = "disabled";
++			};
+ 		rcar_sound: sound@13c00000 {
+ 			/*
+ 			 * #sound-dai-cells is required
+-- 
+2.25.1
+
