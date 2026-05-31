@@ -18,6 +18,7 @@ SRCREV = "24a1346c1f4371ef6161699c8ccb8bf968e6bb0a"
 SRC_URI:append = " \
 	file://0001-change-makefile.patch \
 	file://0001-Support-u-dma-buf-for-kernel-6.10.patch \
+	file://0002-u-dma-buf-update-following-kernel-6.18-changes.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -25,10 +26,19 @@ S = "${WORKDIR}/git"
 # Build u-dma-buf kernel module without suffix
 KERNEL_MODULE_PACKAGE_SUFFIX = ""
 
+UDMABUF_PATHMAP_FLAGS = " \
+    -fmacro-prefix-map=${STAGING_KERNEL_DIR}=/usr/src/kernel \
+    -fmacro-prefix-map=${S}=/usr/src/debug/${PN}/${PV} \
+"
+
+EXTRA_OEMAKE:append = " \
+    KCFLAGS='${UDMABUF_PATHMAP_FLAGS}' \
+    KBUILD_EXTRA_CPPFLAGS='${UDMABUF_PATHMAP_FLAGS}' \
+"
 
 do_compile() {
     cd ${S}
-    make all
+    oe_runmake all
 }
 
 
