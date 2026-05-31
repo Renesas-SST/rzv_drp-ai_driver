@@ -1,0 +1,110 @@
+From 04c607145735f3869b0d7b1a3026745265195fe8 Mon Sep 17 00:00:00 2001
+From: Tien Nguyen <tien.nguyen.uh@renesas.com>
+Date: Thu, 21 May 2026 11:42:35 +0000
+Subject: [PATCH] u-dma-buf: update following kernel 6.18 changes
+
+Upstream-Status: Pending
+
+Signed-off-by: Tien Nguyen <tien.nguyen.uh@renesas.com>
+---
+ u-dma-buf.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/u-dma-buf.c b/u-dma-buf.c
+index 6f7c7dc..be53f45 100644
+--- a/u-dma-buf.c
++++ b/u-dma-buf.c
+@@ -841,12 +841,12 @@ static struct udmabuf_device_data* udmabuf_device_create(const char* name, struc
+      */
+     {
+         if ((0 <= minor) && (minor < DEVICE_MAX_NUM)) {
+-            if (ida_simple_get(&udmabuf_device_ida, minor, minor+1, GFP_KERNEL) < 0) {
++            if (ida_alloc_range(&udmabuf_device_ida, minor, minor, GFP_KERNEL) < 0) {
+                 printk(KERN_ERR "couldn't allocate minor number(=%d).\n", minor);
+                 goto failed;
+             }
+         } else if(minor < 0) {
+-            if ((minor = ida_simple_get(&udmabuf_device_ida, 0, DEVICE_MAX_NUM, GFP_KERNEL)) < 0) {
++            if ((minor = ida_alloc_range(&udmabuf_device_ida, 0, DEVICE_MAX_NUM - 1, GFP_KERNEL)) < 0) {
+                 printk(KERN_ERR "couldn't allocate new minor number. return=%d.\n", minor);
+                 goto failed;
+             }
+@@ -974,7 +974,7 @@ static struct udmabuf_device_data* udmabuf_device_create(const char* name, struc
+     if (done & DONE_SET_DMA_DEV  ) { put_device(this->dma_dev);}
+     if (done & DONE_CHRDEV_ADD   ) { cdev_del(&this->cdev); }
+     if (done & DONE_DEVICE_CREATE) { device_destroy(udmabuf_sys_class, this->device_number);}
+-    if (done & DONE_ALLOC_MINOR  ) { ida_simple_remove(&udmabuf_device_ida, minor);}
++    if (done & DONE_ALLOC_MINOR  ) { ida_free(&udmabuf_device_ida, minor);}
+     if (this != NULL)              { kfree(this); }
+     return NULL;
+ }
+@@ -1044,7 +1044,7 @@ static int udmabuf_device_destroy(struct udmabuf_device_data* this)
+     put_device(this->dma_dev);
+     cdev_del(&this->cdev);
+     device_destroy(udmabuf_sys_class, this->device_number);
+-    ida_simple_remove(&udmabuf_device_ida, MINOR(this->device_number));
++    ida_free(&udmabuf_device_ida, MINOR(this->device_number));
+     kfree(this);
+     return 0;
+ }
+@@ -1382,13 +1382,13 @@ static void udmabuf_platform_device_remove_all(void)
+ 
+ #define CALL_UDMABUF_STATIC_DEVICE_CREATE(__num)                         \
+     if (udmabuf ## __num != 0) {                                         \
+-        ida_simple_remove(&udmabuf_device_ida, __num);                   \
++        ida_free(&udmabuf_device_ida, __num);                   \
+         udmabuf_platform_device_create(NULL, __num, udmabuf ## __num);   \
+     }
+ 
+ #define CALL_UDMABUF_STATIC_DEVICE_RESERVE_MINOR_NUMBER(__num)           \
+     if (udmabuf ## __num != 0) {                                         \
+-        ida_simple_get(&udmabuf_device_ida, __num, __num+1, GFP_KERNEL); \
++        ida_alloc_range(&udmabuf_device_ida, __num, __num, GFP_KERNEL); \
+     }
+ 
+ DEFINE_UDMABUF_STATIC_DEVICE_PARAM(0);
+@@ -1721,16 +1721,15 @@ failed:
+  */
+ static int udmabuf_platform_driver_probe(struct platform_device *pdev)
+ {
+-    int retval = 0;
+-
+     dev_dbg(&pdev->dev, "driver probe start.\n");
+ 
+-    retval = udmabuf_device_probe(&pdev->dev);
++    udmabuf_device_probe(&pdev->dev);
+     
+     if (info_enable) {
+         dev_info(&pdev->dev, "driver installed.\n");
+     }
+-    return retval;
++    return 0;
++
+ }
+ /**
+  * udmabuf_platform_driver_remove() -  Remove call for the device.
+@@ -1739,19 +1738,17 @@ static int udmabuf_platform_driver_probe(struct platform_device *pdev)
+  *
+  * Unregister the device after releasing the resources.
+  */
+-static int udmabuf_platform_driver_remove(struct platform_device *pdev)
++static void udmabuf_platform_driver_remove(struct platform_device *pdev)
+ {
+     struct udmabuf_device_data* this   = dev_get_drvdata(&pdev->dev);
+-    int                         retval = 0;
+ 
+     dev_dbg(&pdev->dev, "driver remove start.\n");
+ 
+-    retval = udmabuf_device_remove(&pdev->dev, this);
++    udmabuf_device_remove(&pdev->dev, this);
+ 
+     if (info_enable) {
+         dev_info(&pdev->dev, "driver removed.\n");
+     }
+-    return retval;
+ }
+ 
+ /**
+-- 
+2.43.0
+
