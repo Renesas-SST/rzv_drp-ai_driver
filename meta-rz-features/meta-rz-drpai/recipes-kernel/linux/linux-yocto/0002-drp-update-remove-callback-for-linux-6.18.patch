@@ -12,16 +12,15 @@ Signed-off-by: Quoc Trinh <quoc.trinh.fz@renesas.com>
  1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/drp/drp-if.c b/drivers/drp/drp-if.c
-index 000000000000..111111111111 100644
 --- a/drivers/drp/drp-if.c
 +++ b/drivers/drp/drp-if.c
-@@ -134,7 +134,7 @@
+@@ -135,4 +135,4 @@
  /* A function called from the kernel */
  static int drp_probe(struct platform_device *pdev);
 -static int drp_remove(struct platform_device *pdev);
 +static void drp_remove(struct platform_device *pdev);
  static int drp_open(struct inode *inode, struct file *file);
-@@ -324,13 +324,11 @@ static int drp_probe(struct platform_device *pdev)
+@@ -324,10 +324,8 @@ static int drp_probe(struct platform_device *pdev)
      return ret;
  }
  
