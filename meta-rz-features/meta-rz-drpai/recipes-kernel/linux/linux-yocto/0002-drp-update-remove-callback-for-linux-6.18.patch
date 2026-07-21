@@ -8,9 +8,10 @@ which prevents the kernel from compiling with -Wincompatible-pointer-types.
 Upstream-Status: Pending
 Signed-off-by: Quoc Trinh <quoc.trinh.fz@renesas.com>
 ---
+ drivers/drp/drp-if.c         | 5 ++---
  drivers/drpai/drpai-if.c     | 5 ++---
  drivers/drpai/drpai-if_v2h.c | 5 ++---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ 3 files changed, 6 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/drpai/drpai-if.c b/drivers/drpai/drpai-if.c
 --- a/drivers/drpai/drpai-if.c
@@ -29,6 +30,25 @@ diff --git a/drivers/drpai/drpai-if.c b/drivers/drpai/drpai-if.c
  {
      DRPAI_DEBUG_PRINT("start.\n");
 @@ -365,2 +365 @@
+-    return 0;
+ }
+diff --git a/drivers/drp/drp-if.c b/drivers/drp/drp-if.c
+--- a/drivers/drp/drp-if.c
++++ b/drivers/drp/drp-if.c
+@@ -135,6 +135,6 @@
+ /* A function called from the kernel */
+ static int drp_probe(struct platform_device *pdev);
+-static int drp_remove(struct platform_device *pdev);
++static void drp_remove(struct platform_device *pdev);
+ static int drp_open(struct inode *inode, struct file *file);
+ static int drp_close(struct inode *inode, struct file *file);
+ static int drp_flush(struct file *file, fl_owner_t id);
+@@ -327,3 +327,3 @@
+-static int drp_remove(struct platform_device *pdev)
++static void drp_remove(struct platform_device *pdev)
+ {
+     drp_unregist_driver();
+@@ -332,2 +332 @@
 -    return 0;
  }
 diff --git a/drivers/drpai/drpai-if_v2h.c b/drivers/drpai/drpai-if_v2h.c
